@@ -1,11 +1,11 @@
 import uuid
 
-from sqlalchemy import Enum, ForeignKey, String
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import TimestampMixin, UUIDMixin, str_enum
 from app.models.enums import InvitationStatus, VipLevel
 
 
@@ -27,7 +27,7 @@ class Invitation(UUIDMixin, TimestampMixin, Base):
     guest_phone: Mapped[str | None] = mapped_column(String(30), nullable=True)
 
     vip_level: Mapped[VipLevel] = mapped_column(
-        Enum(VipLevel, name="vip_level", create_type=False), default=VipLevel.REGULAR, nullable=False
+        str_enum(VipLevel, "vip_level", create_type=False), default=VipLevel.REGULAR, nullable=False
     )
     custom_vip_label: Mapped[str | None] = mapped_column(String(80), nullable=True)
     seat_id: Mapped[uuid.UUID | None] = mapped_column(
@@ -37,7 +37,7 @@ class Invitation(UUIDMixin, TimestampMixin, Base):
     # Opaque token guests use to view/accept their invite without an account.
     guest_token: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
     status: Mapped[InvitationStatus] = mapped_column(
-        Enum(InvitationStatus, name="invitation_status"), default=InvitationStatus.PENDING, nullable=False
+        str_enum(InvitationStatus, "invitation_status"), default=InvitationStatus.PENDING, nullable=False
     )
 
     event = relationship("Event", back_populates="invitations")

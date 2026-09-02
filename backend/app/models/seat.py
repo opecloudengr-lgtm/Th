@@ -1,11 +1,11 @@
 import uuid
 
-from sqlalchemy import Enum, ForeignKey, String, UniqueConstraint
+from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import TimestampMixin, UUIDMixin, str_enum
 from app.models.enums import SeatStatus
 
 
@@ -20,7 +20,7 @@ class Seat(UUIDMixin, TimestampMixin, Base):
     row_label: Mapped[str] = mapped_column(String(20), nullable=False)
     number: Mapped[str] = mapped_column(String(20), nullable=False)
     status: Mapped[SeatStatus] = mapped_column(
-        Enum(SeatStatus, name="seat_status"), default=SeatStatus.AVAILABLE, nullable=False
+        str_enum(SeatStatus, "seat_status"), default=SeatStatus.AVAILABLE, nullable=False
     )
 
     event = relationship("Event", back_populates="seats")

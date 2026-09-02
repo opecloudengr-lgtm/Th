@@ -1,11 +1,11 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Enum, String
+from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import TimestampMixin, UUIDMixin, str_enum
 from app.models.enums import UserRole
 
 
@@ -18,7 +18,7 @@ class User(UUIDMixin, TimestampMixin, Base):
     phone: Mapped[str] = mapped_column(String(30), nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[UserRole] = mapped_column(
-        Enum(UserRole, name="user_role"), default=UserRole.ATTENDEE, nullable=False
+        str_enum(UserRole, "user_role"), default=UserRole.ATTENDEE, nullable=False
     )
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

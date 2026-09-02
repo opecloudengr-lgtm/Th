@@ -2,12 +2,12 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, JSON, Numeric, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import TimestampMixin, UUIDMixin, str_enum
 from app.models.enums import EventCategory, EventFormat, EventStatus, RegistrationMode, SectionType
 
 
@@ -21,13 +21,13 @@ class Event(UUIDMixin, TimestampMixin, Base):
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     slug: Mapped[str] = mapped_column(String(220), unique=True, index=True, nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    category: Mapped[EventCategory] = mapped_column(Enum(EventCategory, name="event_category"), nullable=False)
-    event_format: Mapped[EventFormat] = mapped_column(Enum(EventFormat, name="event_format"), nullable=False)
+    category: Mapped[EventCategory] = mapped_column(str_enum(EventCategory, "event_category"), nullable=False)
+    event_format: Mapped[EventFormat] = mapped_column(str_enum(EventFormat, "event_format"), nullable=False)
     registration_mode: Mapped[RegistrationMode] = mapped_column(
-        Enum(RegistrationMode, name="registration_mode"), default=RegistrationMode.PUBLIC, nullable=False
+        str_enum(RegistrationMode, "registration_mode"), default=RegistrationMode.PUBLIC, nullable=False
     )
     status: Mapped[EventStatus] = mapped_column(
-        Enum(EventStatus, name="event_status"), default=EventStatus.DRAFT, nullable=False
+        str_enum(EventStatus, "event_status"), default=EventStatus.DRAFT, nullable=False
     )
 
     venue_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -76,7 +76,7 @@ class EventSection(UUIDMixin, TimestampMixin, Base):
     event_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("events.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    section_type: Mapped[SectionType] = mapped_column(Enum(SectionType, name="section_type"), nullable=False)
+    section_type: Mapped[SectionType] = mapped_column(str_enum(SectionType, "section_type"), nullable=False)
     content: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
     order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 

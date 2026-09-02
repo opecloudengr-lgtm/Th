@@ -1,12 +1,12 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String
+from sqlalchemy import Boolean, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import TimestampMixin, UUIDMixin, str_enum
 from app.models.enums import RegistrationStatus, TicketStatus, VipLevel
 
 
@@ -31,7 +31,7 @@ class Registration(UUIDMixin, TimestampMixin, Base):
     phone: Mapped[str | None] = mapped_column(String(30), nullable=True)
 
     status: Mapped[RegistrationStatus] = mapped_column(
-        Enum(RegistrationStatus, name="registration_status"), default=RegistrationStatus.PENDING, nullable=False
+        str_enum(RegistrationStatus, "registration_status"), default=RegistrationStatus.PENDING, nullable=False
     )
     is_guest_invite: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
@@ -58,12 +58,12 @@ class Ticket(UUIDMixin, TimestampMixin, Base):
     secure_token: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
 
     vip_level: Mapped[VipLevel] = mapped_column(
-        Enum(VipLevel, name="vip_level"), default=VipLevel.REGULAR, nullable=False
+        str_enum(VipLevel, "vip_level"), default=VipLevel.REGULAR, nullable=False
     )
     custom_vip_label: Mapped[str | None] = mapped_column(String(80), nullable=True)
 
     status: Mapped[TicketStatus] = mapped_column(
-        Enum(TicketStatus, name="ticket_status"), default=TicketStatus.PENDING, nullable=False
+        str_enum(TicketStatus, "ticket_status"), default=TicketStatus.PENDING, nullable=False
     )
 
     issued_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

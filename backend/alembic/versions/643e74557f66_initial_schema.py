@@ -1,8 +1,8 @@
 """initial schema
 
-Revision ID: 0ffe18cd4d78
+Revision ID: 643e74557f66
 Revises: 
-Create Date: 2026-09-02 21:19:35.030749
+Create Date: 2026-09-02 21:35:40.233506
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '0ffe18cd4d78'
+revision: str = '643e74557f66'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,7 +26,7 @@ def upgrade() -> None:
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('phone', sa.String(length=30), nullable=False),
     sa.Column('password_hash', sa.String(length=255), nullable=False),
-    sa.Column('role', sa.Enum('ATTENDEE', 'ORGANIZER', 'ADMIN', name='user_role'), nullable=False),
+    sa.Column('role', sa.Enum('attendee', 'organizer', 'admin', name='user_role'), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('is_email_verified', sa.Boolean(), nullable=False),
     sa.Column('email_verification_token', sa.String(length=255), nullable=True),
@@ -59,10 +59,10 @@ def upgrade() -> None:
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('slug', sa.String(length=220), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('category', sa.Enum('CONFERENCE', 'SEMINAR', 'WORKSHOP', 'WEBINAR', 'TRAINING', 'MASTERCLASS', 'SUMMIT', 'NETWORKING', 'WEDDING', 'BIRTHDAY', 'GRADUATION', 'ANNIVERSARY', 'PARTY', 'CHURCH_EVENT', 'OTHER', name='event_category'), nullable=False),
-    sa.Column('event_format', sa.Enum('PHYSICAL', 'ONLINE', 'HYBRID', name='event_format'), nullable=False),
-    sa.Column('registration_mode', sa.Enum('PUBLIC', 'PRIVATE', name='registration_mode'), nullable=False),
-    sa.Column('status', sa.Enum('DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED', name='event_status'), nullable=False),
+    sa.Column('category', sa.Enum('conference', 'seminar', 'workshop', 'webinar', 'training', 'masterclass', 'summit', 'networking', 'wedding', 'birthday', 'graduation', 'anniversary', 'party', 'church_event', 'other', name='event_category'), nullable=False),
+    sa.Column('event_format', sa.Enum('physical', 'online', 'hybrid', name='event_format'), nullable=False),
+    sa.Column('registration_mode', sa.Enum('public', 'private', name='registration_mode'), nullable=False),
+    sa.Column('status', sa.Enum('draft', 'published', 'cancelled', 'completed', name='event_status'), nullable=False),
     sa.Column('venue_name', sa.String(length=255), nullable=True),
     sa.Column('address', sa.String(length=500), nullable=True),
     sa.Column('city', sa.String(length=120), nullable=True),
@@ -89,7 +89,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_events_slug'), 'events', ['slug'], unique=True)
     op.create_table('event_sections',
     sa.Column('event_id', sa.UUID(), nullable=False),
-    sa.Column('section_type', sa.Enum('ABOUT', 'SPEAKERS', 'SCHEDULE', 'SPONSORS', 'GALLERY', 'FAQ', 'CONTACT', name='section_type'), nullable=False),
+    sa.Column('section_type', sa.Enum('about', 'speakers', 'schedule', 'sponsors', 'gallery', 'faq', 'contact', name='section_type'), nullable=False),
     sa.Column('content', sa.JSON(), nullable=False),
     sa.Column('order', sa.Integer(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -102,7 +102,7 @@ def upgrade() -> None:
     op.create_table('event_staff',
     sa.Column('event_id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=False),
-    sa.Column('role', sa.Enum('STAFF', 'MANAGER', name='staff_role'), nullable=False),
+    sa.Column('role', sa.Enum('staff', 'manager', name='staff_role'), nullable=False),
     sa.Column('accepted', sa.Boolean(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -116,7 +116,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_event_staff_user_id'), 'event_staff', ['user_id'], unique=False)
     op.create_table('notifications',
     sa.Column('user_id', sa.UUID(), nullable=False),
-    sa.Column('type', sa.Enum('ACCOUNT_VERIFICATION', 'REGISTRATION', 'PAYMENT_SUCCESS', 'TICKET_ISSUED', 'EVENT_UPDATE', 'EVENT_CANCELLED', 'TICKET_REVOKED', 'STAFF_INVITE', 'INVITATION', name='notification_type'), nullable=False),
+    sa.Column('type', sa.Enum('account_verification', 'registration', 'payment_success', 'ticket_issued', 'event_update', 'event_cancelled', 'ticket_revoked', 'staff_invite', 'invitation', name='notification_type'), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('message', sa.Text(), nullable=False),
     sa.Column('is_read', sa.Boolean(), nullable=False),
@@ -134,7 +134,7 @@ def upgrade() -> None:
     sa.Column('section', sa.String(length=80), nullable=False),
     sa.Column('row_label', sa.String(length=20), nullable=False),
     sa.Column('number', sa.String(length=20), nullable=False),
-    sa.Column('status', sa.Enum('AVAILABLE', 'RESERVED', 'ASSIGNED', name='seat_status'), nullable=False),
+    sa.Column('status', sa.Enum('available', 'reserved', 'assigned', name='seat_status'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -168,11 +168,11 @@ def upgrade() -> None:
     sa.Column('guest_name', sa.String(length=200), nullable=False),
     sa.Column('guest_email', sa.String(length=255), nullable=False),
     sa.Column('guest_phone', sa.String(length=30), nullable=True),
-    sa.Column('vip_level', sa.Enum('REGULAR', 'VIP', 'VVIP', 'CHAIRMAN', 'SPECIAL_GUEST', 'SPEAKER', 'HOST', 'STAFF', 'MEDIA', 'CUSTOM', name='vip_level'), nullable=False),
+    sa.Column('vip_level', sa.Enum('regular', 'vip', 'vvip', 'chairman', 'special_guest', 'speaker', 'host', 'staff', 'media', 'custom', name='vip_level'), nullable=False),
     sa.Column('custom_vip_label', sa.String(length=80), nullable=True),
     sa.Column('seat_id', sa.UUID(), nullable=True),
     sa.Column('guest_token', sa.String(length=255), nullable=False),
-    sa.Column('status', sa.Enum('PENDING', 'SENT', 'ACCEPTED', 'DECLINED', name='invitation_status'), nullable=False),
+    sa.Column('status', sa.Enum('pending', 'sent', 'accepted', 'declined', name='invitation_status'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -193,7 +193,7 @@ def upgrade() -> None:
     sa.Column('full_name', sa.String(length=200), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('phone', sa.String(length=30), nullable=True),
-    sa.Column('status', sa.Enum('PENDING', 'CONFIRMED', 'CANCELLED', name='registration_status'), nullable=False),
+    sa.Column('status', sa.Enum('pending', 'confirmed', 'cancelled', name='registration_status'), nullable=False),
     sa.Column('is_guest_invite', sa.Boolean(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -214,7 +214,7 @@ def upgrade() -> None:
     sa.Column('paystack_reference', sa.String(length=120), nullable=False),
     sa.Column('paystack_access_code', sa.String(length=120), nullable=True),
     sa.Column('paystack_authorization_url', sa.String(length=500), nullable=True),
-    sa.Column('status', sa.Enum('PENDING', 'SUCCESS', 'FAILED', name='payment_status'), nullable=False),
+    sa.Column('status', sa.Enum('pending', 'success', 'failed', name='payment_status'), nullable=False),
     sa.Column('paid_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('raw_response', sa.JSON(), nullable=True),
     sa.Column('webhook_verified', sa.Boolean(), nullable=False),
@@ -231,9 +231,9 @@ def upgrade() -> None:
     sa.Column('seat_id', sa.UUID(), nullable=True),
     sa.Column('ticket_code', sa.String(length=30), nullable=False),
     sa.Column('secure_token', sa.String(length=255), nullable=False),
-    sa.Column('vip_level', sa.Enum('REGULAR', 'VIP', 'VVIP', 'CHAIRMAN', 'SPECIAL_GUEST', 'SPEAKER', 'HOST', 'STAFF', 'MEDIA', 'CUSTOM', name='vip_level'), nullable=False),
+    sa.Column('vip_level', sa.Enum('regular', 'vip', 'vvip', 'chairman', 'special_guest', 'speaker', 'host', 'staff', 'media', 'custom', name='vip_level'), nullable=False),
     sa.Column('custom_vip_label', sa.String(length=80), nullable=True),
-    sa.Column('status', sa.Enum('PENDING', 'ACTIVE', 'USED', 'REVOKED', 'EXPIRED', 'CANCELLED', name='ticket_status'), nullable=False),
+    sa.Column('status', sa.Enum('pending', 'active', 'used', 'revoked', 'expired', 'cancelled', name='ticket_status'), nullable=False),
     sa.Column('issued_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('used_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('revoked_reason', sa.String(length=255), nullable=True),
@@ -252,7 +252,7 @@ def upgrade() -> None:
     sa.Column('ticket_id', sa.UUID(), nullable=False),
     sa.Column('event_id', sa.UUID(), nullable=False),
     sa.Column('staff_user_id', sa.UUID(), nullable=True),
-    sa.Column('method', sa.Enum('QR', 'MANUAL', name='checkin_method'), nullable=False),
+    sa.Column('method', sa.Enum('qr', 'manual', name='checkin_method'), nullable=False),
     sa.Column('device_info', sa.String(length=255), nullable=True),
     sa.Column('checked_in_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.core.database import get_db
 from app.core.deps import assert_event_staff_access, get_current_user
 from app.models.checkin import CheckIn
+from app.models.enums import TicketStatus
 from app.models.ticket import Ticket
 from app.models.user import User
 from app.schemas.checkin import CheckInOut, CheckInRequest, TicketVerificationView, VerifyTicketRequest
@@ -48,7 +49,7 @@ def check_in_ticket(
         return view
 
     try:
-        perform_atomic_checkin(db, ticket, user.id, payload.method, payload.device_info)
+        checkin = perform_atomic_checkin(db, ticket, user.id, payload.method, payload.device_info)
     except CheckInConflict as exc:
         db.rollback()
         refreshed = find_ticket(db, token=payload.token, ticket_code=payload.ticket_code)
@@ -63,8 +64,13 @@ def check_in_ticket(
     )
     db.commit()
 
-    final_ticket = find_ticket(db, token=payload.token, ticket_code=payload.ticket_code)
-    return build_verification_view(final_ticket, event_id)
+    # Report the check-in we just performed as a success, rather than
+    # re-running eligibility checks against the now-USED ticket (which
+    # would incorrectly report our own success as "already used").
+    view.valid = True
+    view.status = TicketStatus.USED
+    view.checked_in_at = checkin.checked_in_at
+    return view
 
 
 @router.get("/events/{event_id}/checkins", response_model=list[CheckInOut])

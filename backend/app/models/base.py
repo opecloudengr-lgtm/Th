@@ -1,11 +1,20 @@
+import enum
 import uuid
 from datetime import datetime
 
 from sqlalchemy import DateTime, func
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
+
+
+def str_enum(enum_cls: type[enum.Enum], name: str, **kwargs):
+    """Postgres ENUM column that stores the Python str-Enum's *value*
+    (e.g. "attendee") rather than SQLAlchemy's default of the member name
+    (e.g. "ATTENDEE") -- keeps raw SQL/reporting/exports human-readable."""
+    return SAEnum(enum_cls, name=name, values_callable=lambda obj: [e.value for e in obj], **kwargs)
 
 
 class UUIDMixin:

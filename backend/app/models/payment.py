@@ -2,12 +2,12 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import JSON, DateTime, Enum, ForeignKey, Numeric, String
+from sqlalchemy import JSON, DateTime, ForeignKey, Numeric, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.base import TimestampMixin, UUIDMixin
+from app.models.base import TimestampMixin, UUIDMixin, str_enum
 from app.models.enums import PaymentStatus
 
 
@@ -26,7 +26,7 @@ class Payment(UUIDMixin, TimestampMixin, Base):
     paystack_authorization_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     status: Mapped[PaymentStatus] = mapped_column(
-        Enum(PaymentStatus, name="payment_status"), default=PaymentStatus.PENDING, nullable=False
+        str_enum(PaymentStatus, "payment_status"), default=PaymentStatus.PENDING, nullable=False
     )
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     raw_response: Mapped[dict | None] = mapped_column(JSON, nullable=True)

@@ -74,3 +74,27 @@ def require_roles(*roles: UserRole):
 
 require_organizer = require_roles(UserRole.ORGANIZER)
 require_admin = require_roles(UserRole.ADMIN)
+
+
+def assert_event_staff_access(db, event_id: uuid.UUID, user: User):
+    """Organizer (owner), admin, or an accepted event-scoped staff member
+    may verify/check-in tickets for this event. Everyone else is denied,
+    including staff accepted for a *different* event -- this is the
+    unauthorized-staff-action guard the PRD calls out explicitly."""
+    from app.models.event import Event
+    from app.models.staff import EventStaff
+
+    event = db.get(Event, event_id)
+    if not event:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Event not found.")
+    if event.organizer_id == user.id or user.role == UserRole.ADMIN:
+        return event
+
+    is_staff = (
+        db.query(EventStaff)
+        .filter(EventStaff.event_id == event_id, EventStaff.user_id == user.id, EventStaff.accepted.is_(True))
+        .first()
+    )
+    if not is_staff:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, detail="You are not authorized to verify tickets for this event.")
+    return event

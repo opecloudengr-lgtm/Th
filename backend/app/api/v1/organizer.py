@@ -232,6 +232,7 @@ def list_participants(
         rows.append(
             ParticipantRow(
                 registration_id=r.id,
+                ticket_id=ticket.id if ticket else None,
                 full_name=r.full_name,
                 email=r.email,
                 phone=r.phone,

@@ -259,6 +259,7 @@ export interface EventDashboard {
 
 export interface ParticipantRow {
   registration_id: string;
+  ticket_id: string | null;
   full_name: string;
   email: string;
   phone: string | null;

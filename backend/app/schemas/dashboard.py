@@ -34,6 +34,7 @@ class EventDashboard(BaseModel):
 
 class ParticipantRow(BaseModel):
     registration_id: uuid.UUID
+    ticket_id: uuid.UUID | None
     full_name: str
     email: str
     phone: str | None

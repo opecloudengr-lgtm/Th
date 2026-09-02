@@ -288,3 +288,20 @@ export const adminApi = {
 export function authHeaderFetchInit(): RequestInit {
   return { headers: tokenStore.access ? { Authorization: `Bearer ${tokenStore.access}` } : {} };
 }
+
+/** Downloads an authenticated file (export, etc.) by fetching it with the
+ * Bearer token attached and triggering a save via a temporary blob link --
+ * a plain <a href> can't carry an Authorization header. */
+export async function downloadWithAuth(url: string, filename: string) {
+  const res = await fetch(url, { headers: tokenStore.access ? { Authorization: `Bearer ${tokenStore.access}` } : {} });
+  if (!res.ok) throw new ApiException("Download failed.", res.status);
+  const blob = await res.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = objectUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(objectUrl);
+}

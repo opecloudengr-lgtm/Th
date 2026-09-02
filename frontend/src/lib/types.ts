@@ -211,6 +211,15 @@ export interface EventStaffMember {
   accepted: boolean;
   created_at: string;
   user: { id: string; first_name: string; last_name: string; email: string };
+  event?: {
+    id: string;
+    title: string;
+    slug: string;
+    status: EventStatus;
+    start_at: string;
+    venue_name: string | null;
+    city: string | null;
+  } | null;
 }
 
 export interface TicketVerificationView {

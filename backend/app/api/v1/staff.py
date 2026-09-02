@@ -98,7 +98,7 @@ def remove_staff(
 def my_staff_events(db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(get_current_user)]):
     return (
         db.query(EventStaff)
-        .options(joinedload(EventStaff.user))
+        .options(joinedload(EventStaff.user), joinedload(EventStaff.event))
         .filter(EventStaff.user_id == user.id, EventStaff.accepted.is_(True))
         .all()
     )

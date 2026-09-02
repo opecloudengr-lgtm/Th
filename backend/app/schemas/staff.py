@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr
 
-from app.models.enums import StaffRole
+from app.models.enums import EventStatus, StaffRole
 
 
 class StaffInviteRequest(BaseModel):
@@ -20,6 +20,18 @@ class StaffUserBrief(BaseModel):
     email: str
 
 
+class StaffEventBrief(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    title: str
+    slug: str
+    status: EventStatus
+    start_at: datetime
+    venue_name: str | None
+    city: str | None
+
+
 class EventStaffOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -29,3 +41,4 @@ class EventStaffOut(BaseModel):
     accepted: bool
     created_at: datetime
     user: StaffUserBrief
+    event: StaffEventBrief | None = None

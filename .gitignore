@@ -34,3 +34,4 @@ frontend/node_modules/
 frontend/next-env.d.ts
 frontend/AGENTS.md
 frontend/CLAUDE.md
+dump.rdb

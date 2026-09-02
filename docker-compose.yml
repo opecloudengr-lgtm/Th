@@ -30,11 +30,17 @@ services:
   backend:
     build: ./backend
     restart: unless-stopped
+    # Copy backend/.env.example to backend/.env and fill in real secrets
+    # (Paystack keys, SMTP, SECRET_KEY) for anything beyond local testing.
+    # Safe to omit for a first local run -- payments/email just degrade
+    # gracefully (see backend/README or the root README).
     env_file:
-      - ./backend/.env
+      - path: ./backend/.env
+        required: false
     environment:
       DATABASE_URL: postgresql+psycopg2://eventpass:eventpass@postgres:5432/eventpass
       REDIS_URL: redis://redis:6379/0
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     ports:
       - "8000:8000"
     depends_on:
@@ -46,10 +52,13 @@ services:
       - backend_media:/app/media
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        # Inlined into the client bundle at build time -- set this to your
+        # real backend URL before building for anything beyond localhost.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
     restart: unless-stopped
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
     ports:
       - "3000:3000"
     depends_on:

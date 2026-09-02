@@ -34,6 +34,12 @@ from app.services.ticket_service import issue_ticket
 now = datetime.now(timezone.utc)
 
 
+def at(days_from_now: int, hour: int, minute: int = 0) -> datetime:
+    """A realistic future timestamp (e.g. 9am, not 'whenever the seed script happened to run')."""
+    d = (now + timedelta(days=days_from_now)).replace(hour=hour, minute=minute, second=0, microsecond=0)
+    return d
+
+
 def get_or_create_user(db, *, email, first_name, last_name, phone, role, password="Passw0rd!"):
     user = db.query(User).filter(User.email == email).first()
     if user:
@@ -100,7 +106,7 @@ def main():
             category=EventCategory.CONFERENCE, event_format=EventFormat.PHYSICAL,
             registration_mode=RegistrationMode.PUBLIC, status=EventStatus.PUBLISHED,
             venue_name="Landmark Event Centre", city="Lagos", country="Nigeria",
-            start_at=now + timedelta(days=30), end_at=now + timedelta(days=30, hours=9),
+            start_at=at(30, 9), end_at=at(30, 18),
             theme_color="#7C3AED", currency="NGN", capacity=500, is_discoverable=True,
         )
         if not conf.ticket_types:
@@ -127,7 +133,7 @@ def main():
             category=EventCategory.WEBINAR, event_format=EventFormat.ONLINE,
             registration_mode=RegistrationMode.PUBLIC, status=EventStatus.PUBLISHED,
             online_url="https://meet.example.com/product-design", city=None, country=None,
-            start_at=now + timedelta(days=7), end_at=now + timedelta(days=7, hours=1, minutes=30),
+            start_at=at(7, 17), end_at=at(7, 18, 30),
             theme_color="#059669", currency="NGN", is_discoverable=True,
         )
         if not webinar.ticket_types:
@@ -142,7 +148,7 @@ def main():
             category=EventCategory.WEDDING, event_format=EventFormat.PHYSICAL,
             registration_mode=RegistrationMode.PRIVATE, status=EventStatus.PUBLISHED,
             venue_name="Civic Centre", city="Victoria Island", country="Nigeria",
-            start_at=now + timedelta(days=60), end_at=now + timedelta(days=60, hours=8),
+            start_at=at(60, 14), end_at=at(60, 22),
             theme_color="#DB2777", currency="NGN", is_discoverable=False,
         )
         if not wedding.ticket_types:

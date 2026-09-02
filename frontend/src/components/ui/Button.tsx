@@ -8,11 +8,12 @@ import { cn } from "@/lib/utils";
 type Variant = "primary" | "secondary" | "ghost" | "outline" | "danger";
 type Size = "sm" | "md" | "lg";
 
-interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref" | "children"> {
   variant?: Variant;
   size?: Size;
   loading?: boolean;
   fullWidth?: boolean;
+  children?: React.ReactNode;
 }
 
 const variantClasses: Record<Variant, string> = {

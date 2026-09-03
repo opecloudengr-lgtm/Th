@@ -9,7 +9,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # The browser calls this server itself at a relative /api/v1 path by
-# default (see next.config.ts's rewrite) -- no build-time backend URL
+# default (see src/app/api/[...path]/route.ts) -- no build-time backend URL
 # needed. Only set NEXT_PUBLIC_API_URL (inlined at build time, since it's a
 # NEXT_PUBLIC_* var) if you specifically want the browser to bypass the
 # proxy and call a backend directly.

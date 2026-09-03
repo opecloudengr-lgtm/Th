@@ -27,10 +27,10 @@ import type {
 } from "./types";
 
 // Relative by default: the browser calls this same origin at /api/v1/*, and
-// next.config.ts proxies that server-side to the real backend (see the
-// comment there for why -- this makes auth/CORS work correctly regardless
-// of what URL the frontend itself is reached at). Only set
-// NEXT_PUBLIC_API_URL if you specifically want the browser to call a
+// src/app/api/[...path]/route.ts proxies that server-side to the real
+// backend (see the comment there for why -- this makes auth/CORS work
+// correctly regardless of what URL the frontend itself is reached at). Only
+// set NEXT_PUBLIC_API_URL if you specifically want the browser to call a
 // backend directly instead of going through the proxy.
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 
@@ -289,6 +289,17 @@ export const adminApi = {
   suspendEvent: (id: string) => apiFetch<AdminEventRow>(`/admin/events/${id}/suspend`, { method: "POST" }),
   payments: (params: Record<string, string> = {}) => apiFetch<AdminPaymentRow[]>(`/admin/payments?${new URLSearchParams(params)}`),
   reports: () => apiFetch<PlatformReport>("/admin/reports"),
+};
+
+// ---------------- Dev outbox (no SMTP configured) ----------------
+export interface OutboxEmail {
+  id: string;
+  preview: string;
+}
+
+export const devApi = {
+  outbox: () => apiFetch<OutboxEmail[]>("/dev/outbox", { auth: false }),
+  outboxUrl: (id: string) => `${API_URL}/dev/outbox/${id}`,
 };
 
 export function authHeaderFetchInit(): RequestInit {

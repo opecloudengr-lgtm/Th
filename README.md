@@ -84,12 +84,14 @@ python -m pytest tests/ -v
 | Staff (door scanner) | staff@eventpass.io | Passw0rd! |
 | Attendee | attendee1@eventpass.io | Passw0rd! |
 
+If any of these say "invalid email or password", the seed script hasn't been run against your current database yet — run `docker compose exec backend python seed.py` (or `python seed.py` in the non-Docker setup) and try again; it's safe to re-run.
+
 ## What's real vs. what needs your keys
 
 Everything in this app is wired to real logic — nothing is mocked out. Three things specifically need *your* credentials before they're fully live, and degrade gracefully without them:
 
 - **Payments (Paystack).** `backend/.env`'s `PAYSTACK_SECRET_KEY` / `PAYSTACK_PUBLIC_KEY` are placeholders. Without real keys, paid-ticket registration returns a clear 503 ("payments not configured") and does *not* leave any orphaned data. Add your Paystack keys (test or live) to go live — the integration (initialize → server-side verify → webhook, with HMAC signature verification and amount-mismatch protection) is fully implemented and tested against Paystack's real API contract.
-- **Outbound email.** Without `SMTP_HOST` configured, verification/reset/ticket emails are logged and saved to `backend/media/dev_outbox/` instead of sent, and are viewable at `GET /api/v1/dev/outbox` (dev-mode only) so you can test the full registration → verify → login flow without an SMTP provider. Add real SMTP credentials (or point at SendGrid/Resend's SMTP relay) to send real email.
+- **Outbound email.** Without `SMTP_HOST` configured, verification/reset/ticket emails are logged and saved instead of sent — open **`/dev-outbox`** in the frontend (requires `DEBUG=true` in `backend/.env`, the default in `.env.example`) to read them and click the same verify/reset/ticket link a real email would contain, so you can test the full registration → verify → login flow without an SMTP provider. Add real SMTP credentials (or point at SendGrid/Resend's SMTP relay) to send real email instead.
 - **Image uploads.** Cover images and logos are plain URL fields (paste a link) rather than a file-upload widget, since no object storage (S3/Cloudflare R2/Cloudinary) is configured. The config (`S3_*` in `backend/.env.example`) is ready to wire up if you want real uploads.
 
 ## Deployment

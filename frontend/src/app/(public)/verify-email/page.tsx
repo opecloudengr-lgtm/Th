@@ -3,7 +3,7 @@
 import { CheckCircle2, Loader2, MailWarning, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { AuthShell } from "@/components/AuthShell";
 import { Button } from "@/components/ui/Button";
 import { ApiException, authApi } from "@/lib/api";
@@ -15,6 +15,11 @@ function VerifyEmailInner() {
   const { refreshUser, user } = useAuth();
   const [state, setState] = useState<"loading" | "success" | "error">("loading");
   const [error, setError] = useState("");
+  // Verification tokens are single-use, but React 18/19 Strict Mode
+  // double-invokes effects in development -- without this guard, the
+  // second call would fail with "already used" and clobber the success
+  // state from the first, even though the account really did get verified.
+  const requestedToken = useRef<string | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -22,6 +27,8 @@ function VerifyEmailInner() {
       setError("Missing verification token.");
       return;
     }
+    if (requestedToken.current === token) return;
+    requestedToken.current = token;
     authApi
       .verifyEmail(token)
       .then(async () => {

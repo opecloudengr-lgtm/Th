@@ -54,11 +54,14 @@ services:
   frontend:
     build:
       context: ./frontend
-      args:
-        # Inlined into the client bundle at build time -- set this to your
-        # real backend URL before building for anything beyond localhost.
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
     restart: unless-stopped
+    environment:
+      # Server-side only: the Next.js server proxies /api/* here. This is
+      # Docker Compose's internal DNS name for the backend service -- it
+      # works the same whether you open the site at localhost:3000, a
+      # GitHub Codespaces forwarded URL, or a real domain, because the
+      # browser never talks to this address directly (see next.config.ts).
+      BACKEND_INTERNAL_URL: http://backend:8000
     ports:
       - "3000:3000"
     depends_on:

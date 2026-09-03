@@ -26,7 +26,13 @@ import type {
   User,
 } from "./types";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+// Relative by default: the browser calls this same origin at /api/v1/*, and
+// next.config.ts proxies that server-side to the real backend (see the
+// comment there for why -- this makes auth/CORS work correctly regardless
+// of what URL the frontend itself is reached at). Only set
+// NEXT_PUBLIC_API_URL if you specifically want the browser to call a
+// backend directly instead of going through the proxy.
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 
 const ACCESS_KEY = "eventpass_access";
 const REFRESH_KEY = "eventpass_refresh";

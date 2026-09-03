@@ -6,6 +6,23 @@ A full-stack event registration, ticketing and access-control platform: organize
 - **Frontend:** Next.js 16 (App Router) + TypeScript + Tailwind v4 + Framer Motion + TanStack Query.
 - **Tests:** 23 automated pytest tests against a real Postgres database (auth, IDOR, payment idempotency, and a genuine multi-threaded concurrency test on check-in).
 
+## Networking model (read this if login/register ever fails)
+
+The **browser never calls the backend directly**. It always calls the Next.js server it loaded the page from, at a relative `/api/v1/...` path; `frontend/next.config.ts` proxies that request server-side to the real backend (`BACKEND_INTERNAL_URL`, defaulting to `http://localhost:8000`). This is why the same setup works unchanged on `localhost`, in GitHub Codespaces, or behind a real domain — the browser only ever needs to know one address (wherever it opened the page), and the backend address only has to be reachable from the *server*, which is a much easier problem (container-to-container networking, or plain `localhost` in dev) than guessing what URL a browser sitting on some other machine can reach. It also means the backend's CORS settings essentially don't matter for the app's own frontend, since server-to-server calls aren't subject to browser CORS at all.
+
+If you ever see every login/register/API call fail with a generic error, check this proxy first: confirm the backend is actually running and reachable from wherever the frontend is running, and that `BACKEND_INTERNAL_URL` (or the rewrite's `http://localhost:8000` default) points at it.
+
+## Quick start (GitHub Codespaces — no local install)
+
+1. Open this repo on GitHub, switch to this branch, **Code → Codespaces → Create codespace**.
+2. In the Codespace terminal:
+   ```bash
+   cp backend/.env.example backend/.env
+   docker compose up --build
+   docker compose exec backend python seed.py   # demo accounts, run once
+   ```
+3. When Codespaces shows a "port 3000 available" notification, open it in the browser — that's the whole site, working end to end, no extra configuration needed.
+
 ## Quick start (Docker)
 
 ```bash
@@ -43,7 +60,7 @@ Requires a running PostgreSQL and Redis (Redis is optional in dev — rate limit
 ```bash
 cd frontend
 npm install
-cp .env.example .env.local                # NEXT_PUBLIC_API_URL, defaults to http://localhost:8000/api/v1
+cp .env.example .env.local                # optional -- defaults already point at a local backend on :8000
 npm run dev
 ```
 
@@ -80,9 +97,9 @@ This session doesn't have hosting, domain-registrar, or payment-provider credent
 **Docker Compose on any VPS** (DigitalOcean, Hetzner, Linode, EC2, ...): copy the repo, fill in `backend/.env` with real secrets and your domain in `FRONTEND_URL`/`CORS_ORIGINS`, and run `docker compose up -d --build` behind a reverse proxy (Caddy or nginx) for TLS.
 
 **Split deployment** (Vercel + Render/Railway):
-- Frontend → Vercel: import the repo, set root directory to `frontend`, set `NEXT_PUBLIC_API_URL` to your deployed backend URL (this must be set *before* build — it's inlined into the client bundle).
-- Backend → Render/Railway: deploy `backend/Dockerfile` (or their native Python buildpack running `alembic upgrade head && uvicorn app.main:app`), attach a managed Postgres and Redis, set the env vars from `backend/.env.example`.
-- Point your domain's DNS at the frontend host, add it to `CORS_ORIGINS` and `FRONTEND_URL` on the backend.
+- Backend → Render/Railway: deploy `backend/Dockerfile` (or their native Python buildpack running `alembic upgrade head && uvicorn app.main:app`), attach a managed Postgres and Redis, set the env vars from `backend/.env.example`. Note the backend's public URL.
+- Frontend → Vercel: import the repo, set root directory to `frontend`, set `BACKEND_INTERNAL_URL` to that backend URL (a plain server-side env var, not `NEXT_PUBLIC_*` — no rebuild needed if you change it later). Vercel's rewrites proxy server-side same as anywhere else, so the browser still only ever talks to your Vercel domain.
+- Point your domain's DNS at the frontend host, and set `FRONTEND_URL` on the backend to that domain (used in email links).
 
 **Paystack webhook**: once deployed, register `https://your-api-domain/api/v1/payments/webhook` in your Paystack dashboard so payments confirm even if a customer closes the tab before the client-side verify call fires.
 

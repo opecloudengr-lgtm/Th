@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Ticket } from "lucide-react";
+import { NexoraMark } from "@/components/NexoraMark";
 
 export function Footer() {
   return (
@@ -8,10 +8,8 @@ export function Footer() {
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-xs">
             <Link href="/" className="flex items-center gap-2 font-display text-xl font-semibold text-text-hi">
-              <span className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-violet to-pink">
-                <Ticket className="size-4 text-white" />
-              </span>
-              EventPass
+              <NexoraMark size={32} />
+              Nexora
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-text-mid">
               Registration, ticketing and entrance verification for conferences, weddings, and everything in between.
@@ -39,7 +37,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-line/70 pt-6 text-xs text-text-low">
-          © {new Date().getFullYear()} EventPass by Nexora. Built for real events, real tickets.
+          © {new Date().getFullYear()} Nexora. Built for real events, real tickets.
         </div>
       </div>
     </footer>

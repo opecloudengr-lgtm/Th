@@ -64,7 +64,7 @@ function LoginForm() {
         </Button>
       </form>
       <p className="mt-6 text-center text-sm text-text-mid">
-        New to EventPass?{" "}
+        New to Nexora?{" "}
         <Link href="/register" className="font-medium text-violet hover:underline">
           Create an account
         </Link>

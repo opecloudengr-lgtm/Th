@@ -43,7 +43,7 @@ export default function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="text-xs font-semibold uppercase tracking-widest text-violet">Happening soon</span>
-              <h2 className="mt-2 font-display text-3xl font-medium text-text-hi sm:text-4xl">Live on EventPass right now</h2>
+              <h2 className="mt-2 font-display text-3xl font-medium text-text-hi sm:text-4xl">Live on Nexora right now</h2>
             </div>
             <Link href="/events" className="flex items-center gap-1 text-sm font-medium text-text-mid hover:text-violet">
               See all events <ArrowRight className="size-4" />
@@ -179,7 +179,7 @@ function HeroSection() {
             transition={{ duration: 0.65, delay: 0.16 }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-text-mid"
           >
-            EventPass handles registration, Paystack payments, VIP seating and entrance scanning —
+            Nexora handles registration, Paystack payments, VIP seating and entrance scanning —
             so your conference, wedding, or workshop runs on real infrastructure, not spreadsheets.
           </motion.p>
 
@@ -250,7 +250,7 @@ function TicketStack() {
             <div className="flex h-28 w-8 flex-col items-center justify-center gap-1" style={{ background: t.color }} />
             <div className="ticket-perf h-28" />
             <div className="flex-1 p-4">
-              <div className="text-[10px] font-semibold uppercase tracking-widest text-text-low">EventPass</div>
+              <div className="text-[10px] font-semibold uppercase tracking-widest text-text-low">Nexora</div>
               <div className="mt-1 font-display text-base text-text-hi">{t.name}</div>
               <div className="mt-2 flex items-center justify-between">
                 <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold text-white" style={{ background: t.color }}>

@@ -27,7 +27,7 @@ export default function AdminReportsPage() {
     <div className="mx-auto max-w-6xl">
       <Reveal>
         <h1 className="font-display text-3xl text-text-hi">Platform reports</h1>
-        <p className="mt-1 text-text-mid">A live snapshot of everything happening on EventPass.</p>
+        <p className="mt-1 text-text-mid">A live snapshot of everything happening on Nexora.</p>
       </Reveal>
 
       {isLoading ? (

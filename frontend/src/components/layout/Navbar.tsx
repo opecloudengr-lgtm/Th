@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { LayoutDashboard, LogOut, Menu, Ticket, User as UserIcon, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, User as UserIcon, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { NexoraMark } from "@/components/NexoraMark";
 import { useAuth } from "@/lib/auth-context";
 import { cn, initials } from "@/lib/utils";
 
@@ -25,10 +26,8 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-line/70 bg-ink/80 backdrop-blur-lg">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight text-text-hi">
-          <span className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-violet to-pink">
-            <Ticket className="size-4 text-white" />
-          </span>
-          EventPass
+          <NexoraMark size={32} />
+          Nexora
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -120,7 +119,9 @@ export function Navbar() {
             className="fixed inset-0 z-50 bg-ink/95 backdrop-blur-lg md:hidden"
           >
             <div className="flex h-16 items-center justify-between px-5">
-              <span className="font-display text-xl text-text-hi">EventPass</span>
+              <span className="flex items-center gap-2 font-display text-xl text-text-hi">
+                <NexoraMark size={28} /> Nexora
+              </span>
               <button onClick={() => setOpen(false)} className="p-2 text-text-hi cursor-pointer">
                 <X className="size-6" />
               </button>

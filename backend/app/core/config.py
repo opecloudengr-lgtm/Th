@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # App
-    APP_NAME: str = "EventPass"
+    APP_NAME: str = "Nexora"
     ENV: str = "development"
     DEBUG: bool = True
     API_V1_PREFIX: str = "/api/v1"
@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     SMTP_USERNAME: str = ""
     SMTP_PASSWORD: str = ""
     SMTP_FROM_EMAIL: str = "no-reply@eventpass.local"
-    SMTP_FROM_NAME: str = "EventPass"
+    SMTP_FROM_NAME: str = "Nexora"
     SMTP_USE_TLS: bool = True
 
     # Object storage (S3-compatible). If unset, local disk storage is used.

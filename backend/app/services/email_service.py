@@ -60,12 +60,12 @@ def _wrap(title: str, body_html: str, cta_label: str | None = None, cta_url: str
                 background:#0B0B12;color:#F4F2FF;padding:36px;border-radius:20px;">
       <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:24px;
                   background:linear-gradient(90deg,#A78BFA,#F472B6);-webkit-background-clip:text;
-                  -webkit-text-fill-color:transparent;">EventPass</div>
+                  -webkit-text-fill-color:transparent;">Nexora</div>
       <h1 style="font-size:20px;margin:0 0 12px;">{title}</h1>
       <div style="font-size:15px;line-height:1.6;color:#C9C4E0;">{body_html}</div>
       {cta}
       <p style="margin-top:32px;font-size:12px;color:#6B6685;">
-        Sent by EventPass &middot; if you didn't request this, you can ignore this email.
+        Sent by Nexora &middot; if you didn't request this, you can ignore this email.
       </p>
     </div>
     """
@@ -79,7 +79,7 @@ def send_verification_email(to_email: str, first_name: str, verify_url: str) -> 
         cta_label="Verify email",
         cta_url=verify_url,
     )
-    send_email(to_email, "Verify your EventPass account", html)
+    send_email(to_email, "Verify your Nexora account", html)
 
 
 def send_password_reset_email(to_email: str, first_name: str, reset_url: str) -> None:
@@ -90,7 +90,7 @@ def send_password_reset_email(to_email: str, first_name: str, reset_url: str) ->
         cta_label="Reset password",
         cta_url=reset_url,
     )
-    send_email(to_email, "Reset your EventPass password", html)
+    send_email(to_email, "Reset your Nexora password", html)
 
 
 def send_ticket_email(to_email: str, first_name: str, event_title: str, ticket_url: str) -> None:

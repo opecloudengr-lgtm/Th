@@ -20,7 +20,7 @@ const jbmono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EventPass — Registration, Ticketing & Access Control",
+  title: "Nexora — Registration, Ticketing & Access Control",
   description:
     "Create beautiful events, sell tickets, invite VIP guests, and verify entry at the door with secure QR tickets. Built for conferences, weddings, and everything in between.",
 };

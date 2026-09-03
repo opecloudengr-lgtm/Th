@@ -44,7 +44,7 @@ export default function EventsPage() {
       <Reveal>
         <span className="text-xs font-semibold uppercase tracking-widest text-violet">Discover</span>
         <h1 className="mt-2 font-display text-4xl font-medium text-text-hi">Browse public events</h1>
-        <p className="mt-2 max-w-xl text-text-mid">Search across every published event on EventPass — filter by category, format, and price.</p>
+        <p className="mt-2 max-w-xl text-text-mid">Search across every published event on Nexora — filter by category, format, and price.</p>
       </Reveal>
 
       <Reveal delay={0.05} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">

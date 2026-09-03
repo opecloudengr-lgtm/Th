@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Ticket } from "lucide-react";
 import Link from "next/link";
+import { NexoraMark } from "@/components/NexoraMark";
 
 export function AuthShell({ children, title, subtitle }: { children: React.ReactNode; title: string; subtitle?: string }) {
   return (
@@ -17,10 +17,8 @@ export function AuthShell({ children, title, subtitle }: { children: React.React
         className="relative w-full max-w-md rounded-[26px] border border-line bg-surface p-8 shadow-2xl sm:p-10"
       >
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-text-hi">
-          <span className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-violet to-pink">
-            <Ticket className="size-4 text-white" />
-          </span>
-          EventPass
+          <NexoraMark size={32} />
+          Nexora
         </Link>
         <h1 className="mt-6 font-display text-2xl font-medium text-text-hi">{title}</h1>
         {subtitle && <p className="mt-1.5 text-sm text-text-mid">{subtitle}</p>}

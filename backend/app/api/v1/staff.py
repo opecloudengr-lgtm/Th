@@ -39,7 +39,7 @@ def invite_staff(
     if not staff_user:
         raise HTTPException(
             status.HTTP_404_NOT_FOUND,
-            detail="No EventPass account with that email. Ask them to register first, then invite them.",
+            detail="No Nexora account with that email. Ask them to register first, then invite them.",
         )
 
     existing = db.query(EventStaff).filter(EventStaff.event_id == event.id, EventStaff.user_id == staff_user.id).first()

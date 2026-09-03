@@ -1,4 +1,4 @@
-# EventPass — by Nexora
+# Nexora
 
 A full-stack event registration, ticketing and access-control platform: organizers create and design events, sell free or paid tickets (Paystack), invite VIP guests to private events, assign seating, and verify entry at the door with cryptographically secure, single-use QR tickets. Built from the Nexora PRD as a real, production-oriented MVP — not a static prototype.
 

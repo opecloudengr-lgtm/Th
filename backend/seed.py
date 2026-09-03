@@ -72,7 +72,7 @@ def get_or_create_event(db, organizer, **kwargs):
 def main():
     db = SessionLocal()
     try:
-        print("Seeding EventPass demo data...")
+        print("Seeding Nexora demo data...")
 
         admin = get_or_create_user(
             db, email="admin@eventpass.io", first_name="Platform", last_name="Admin",

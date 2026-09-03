@@ -41,7 +41,7 @@ export function TicketDisplay({
         <div className="flex flex-col sm:flex-row">
           <div className="flex-1 p-7">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-widest text-text-low">EventPass</span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-text-low">Nexora</span>
               <Badge tone={statusTone(ticket.status)}>{titleCase(ticket.status)}</Badge>
             </div>
             <h2 className="mt-3 font-display text-2xl text-text-hi">{event.title}</h2>

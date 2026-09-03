@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Bell, LogOut, Menu, Ticket, X } from "lucide-react";
+import { Bell, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { NexoraMark } from "@/components/NexoraMark";
 import { useAuth } from "@/lib/auth-context";
 import { cn, initials } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -41,10 +42,8 @@ export function DashboardShell({
   const SidebarContent = (
     <>
       <Link href="/" className="flex items-center gap-2 px-1 font-display text-lg font-semibold text-text-hi">
-        <span className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-violet to-pink">
-          <Ticket className="size-4 text-white" />
-        </span>
-        EventPass
+        <NexoraMark size={32} />
+        Nexora
       </Link>
       <div className="mt-1 px-1 text-xs font-medium uppercase tracking-widest text-text-low">{portalLabel}</div>
 
@@ -91,7 +90,9 @@ export function DashboardShell({
       {/* Mobile topbar + drawer */}
       <div className="flex-1">
         <div className="sticky top-0 z-30 flex items-center justify-between border-b border-line/70 bg-ink/90 px-5 py-3.5 backdrop-blur lg:hidden">
-          <span className="font-display text-lg text-text-hi">EventPass</span>
+          <span className="flex items-center gap-2 font-display text-lg text-text-hi">
+            <NexoraMark size={28} /> Nexora
+          </span>
           <button onClick={() => setMobileOpen(true)} className="p-1.5 text-text-hi cursor-pointer">
             <Menu className="size-6" />
           </button>

@@ -46,7 +46,7 @@ export function StaffTab({ event }: { event: EventDetail }) {
     <div>
       <h3 className="font-display text-lg text-text-hi">Verification staff</h3>
       <p className="mt-1 text-sm text-text-mid">
-        Add anyone with an EventPass account to scan and check in tickets for this event.
+        Add anyone with a Nexora account to scan and check in tickets for this event.
       </p>
 
       <div className="mt-4 flex gap-2">

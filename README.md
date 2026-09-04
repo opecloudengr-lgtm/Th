@@ -20,10 +20,12 @@ If you ever see every login/register/API call fail with a generic error, check t
 2. In the Codespace terminal:
    ```bash
    cp backend/.env.example backend/.env
-   docker compose up --build
+   ./scripts/dev-up.sh
    docker compose exec backend python seed.py   # demo accounts, run once
    ```
 3. When Codespaces shows a "port 3000 available" notification, open it in the browser — that's the whole site, working end to end, no extra configuration needed.
+
+Use `./scripts/dev-up.sh` instead of `docker compose up --build` in Codespaces specifically: verification/reset/ticket emails embed an absolute link built from `FRONTEND_URL`, and left at its plain-Docker default (`http://localhost:3000`) that link is dead for anyone opening the site through a Codespaces forwarded URL — "localhost:3000" means their own machine, not the Codespace. The script detects Codespaces (`CODESPACE_NAME`, which Codespaces sets itself) and points `FRONTEND_URL` at the real forwarded URL before starting Compose; everywhere else it's a no-op passthrough to `docker compose up --build`. If you already ran plain `docker compose up --build` and got a dead `localhost:3000` link in an email, fix it going forward with `export FRONTEND_URL="https://${CODESPACE_NAME}-3000.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-app.github.dev}"` then `docker compose up -d --force-recreate backend` (no rebuild needed). Old emails already sent keep their old (dead) link — while logged in, visit `/verify-email` (no `?token=`) and use its "Resend verification email" button to get a fresh one, then open it from `/dev-outbox`.
 
 ## Quick start (Docker)
 

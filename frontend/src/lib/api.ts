@@ -146,7 +146,7 @@ export const authApi = {
   resetPassword: (token: string, new_password: string, confirm_password: string) =>
     apiFetch("/auth/reset-password", { method: "POST", body: JSON.stringify({ token, new_password, confirm_password }), auth: false }),
   me: () => apiFetch<User>("/auth/me"),
-  updateProfile: (data: Partial<{ first_name: string; last_name: string; phone: string; avatar_url: string }>) =>
+  updateProfile: (data: Partial<{ first_name: string; last_name: string; phone: string; avatar_url: string | null }>) =>
     apiFetch<User>("/auth/me", { method: "PATCH", body: JSON.stringify(data) }),
   changePassword: (current_password: string, new_password: string) =>
     apiFetch("/auth/change-password", { method: "POST", body: JSON.stringify({ current_password, new_password }) }),
@@ -301,6 +301,30 @@ export const devApi = {
   outbox: () => apiFetch<OutboxEmail[]>("/dev/outbox", { auth: false }),
   outboxUrl: (id: string) => `${API_URL}/dev/outbox/${id}`,
 };
+
+// ---------------- Uploads ----------------
+/** Uploads an image file (cover, logo, avatar). Bypasses apiFetch's
+ * JSON-only body handling since this needs a multipart/form-data body with
+ * no Content-Type set manually (the browser fills in the boundary). */
+export async function uploadImage(file: File): Promise<{ url: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch(`${API_URL}/uploads/image`, {
+    method: "POST",
+    headers: tokenStore.access ? { Authorization: `Bearer ${tokenStore.access}` } : {},
+    body: formData,
+  });
+  if (!res.ok) {
+    let body: unknown = null;
+    try {
+      body = await res.json();
+    } catch {
+      /* no body */
+    }
+    throw new ApiException(extractMessage(body), res.status);
+  }
+  return res.json();
+}
 
 export function authHeaderFetchInit(): RequestInit {
   return { headers: tokenStore.access ? { Authorization: `Bearer ${tokenStore.access}` } : {} };

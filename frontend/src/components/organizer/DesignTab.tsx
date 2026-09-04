@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input, Label, Select, Textarea } from "@/components/ui/Field";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import { ApiException, eventsApi } from "@/lib/api";
 import type { EventDetail, SectionType } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -19,8 +20,8 @@ const bodySections: { type: SectionType; label: string }[] = [
 ];
 
 export function DesignTab({ event, onChange }: { event: EventDetail; onChange: () => void }) {
-  const [coverUrl, setCoverUrl] = useState(event.cover_image_url ?? "");
-  const [logoUrl, setLogoUrl] = useState(event.logo_url ?? "");
+  const [coverUrl, setCoverUrl] = useState<string | null>(event.cover_image_url ?? null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(event.logo_url ?? null);
   const [themeColor, setThemeColor] = useState(event.theme_color);
   const [template, setTemplate] = useState(event.ticket_template);
   const [savingBrand, setSavingBrand] = useState(false);
@@ -47,7 +48,7 @@ export function DesignTab({ event, onChange }: { event: EventDetail; onChange: (
   const saveBrand = async () => {
     setSavingBrand(true);
     try {
-      await eventsApi.update(event.id, { cover_image_url: coverUrl || null, logo_url: logoUrl || null, theme_color: themeColor, ticket_template: template });
+      await eventsApi.update(event.id, { cover_image_url: coverUrl, logo_url: logoUrl, theme_color: themeColor, ticket_template: template });
       toast.success("Design saved.");
       onChange();
     } catch (err) {
@@ -84,12 +85,12 @@ export function DesignTab({ event, onChange }: { event: EventDetail; onChange: (
         <h3 className="font-display text-lg text-text-hi">Brand</h3>
         <div className="mt-4 space-y-4">
           <div>
-            <Label>Cover image URL</Label>
-            <Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://…" />
+            <Label>Cover image</Label>
+            <ImageUpload value={coverUrl} onChange={setCoverUrl} shape="banner" />
           </div>
           <div>
-            <Label>Logo URL</Label>
-            <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://…" />
+            <Label>Logo</Label>
+            <ImageUpload value={logoUrl} onChange={setLogoUrl} shape="square" />
           </div>
           <div>
             <Label>Theme color</Label>

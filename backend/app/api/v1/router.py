@@ -13,6 +13,7 @@ from app.api.v1.registrations import router as registrations_router
 from app.api.v1.seating import router as seating_router
 from app.api.v1.staff import router as staff_router
 from app.api.v1.tickets import router as tickets_router
+from app.api.v1.uploads import router as uploads_router
 
 api_router = APIRouter()
 api_router.include_router(auth_router)
@@ -28,3 +29,4 @@ api_router.include_router(checkins_router)
 api_router.include_router(organizer_router)
 api_router.include_router(notifications_router)
 api_router.include_router(admin_router)
+api_router.include_router(uploads_router)

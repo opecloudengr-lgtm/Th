@@ -9,10 +9,10 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Field";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import { ApiException } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { authApi } from "@/lib/api";
-import { initials } from "@/lib/utils";
 
 const profileSchema = z.object({
   first_name: z.string().min(1, "Required"),
@@ -51,6 +51,16 @@ export default function ProfilePage() {
     }
   };
 
+  const onAvatarChange = async (url: string | null) => {
+    try {
+      await authApi.updateProfile({ avatar_url: url });
+      await refreshUser();
+      toast.success(url ? "Photo updated." : "Photo removed.");
+    } catch (err) {
+      toast.error(err instanceof ApiException ? err.message : "Could not update photo.");
+    }
+  };
+
   const onChangePassword = async (data: PasswordForm) => {
     try {
       await authApi.changePassword(data.current_password, data.new_password);
@@ -71,10 +81,8 @@ export default function ProfilePage() {
         <p className="mt-1 text-text-mid">Manage your account details.</p>
       </Reveal>
 
-      <Reveal delay={0.05} className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-6">
-        <span className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-violet to-pink text-lg font-semibold text-white">
-          {initials(user.first_name, user.last_name)}
-        </span>
+      <Reveal delay={0.05} className="flex items-center gap-5 rounded-2xl border border-line bg-surface p-6">
+        <ImageUpload value={user.avatar_url} onChange={onAvatarChange} shape="square" className="rounded-full" />
         <div>
           <div className="font-display text-lg text-text-hi">{user.first_name} {user.last_name}</div>
           <div className="text-sm text-text-mid">{user.email}</div>

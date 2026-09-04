@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
-  Calendar, Check, Globe, Lock, MapPin, ShieldCheck, Sparkles, Ticket as TicketIcon,
+  Calendar, Check, Globe, Lock, MapPin, Maximize2, ShieldCheck, Sparkles, Ticket as TicketIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -12,11 +12,12 @@ import { toast } from "sonner";
 import { Reveal } from "@/components/motion/Reveal";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Lightbox } from "@/components/ui/Lightbox";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ApiException, eventsApi, registrationsApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import type { TicketType } from "@/lib/types";
-import { formatDate, formatDateTime, formatMoney, titleCase } from "@/lib/utils";
+import { cn, formatDate, formatDateTime, formatMoney, titleCase } from "@/lib/utils";
 
 export default function EventDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -24,6 +25,7 @@ export default function EventDetailPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedTicketType, setSelectedTicketType] = useState<TicketType | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { data: event, isLoading } = useQuery({
     queryKey: ["event", slug],
@@ -90,7 +92,11 @@ export default function EventDetailPage() {
     <div>
       {/* Cover */}
       <div
-        className="relative flex h-[340px] items-end bg-cover bg-center sm:h-[420px]"
+        onClick={() => event.cover_image_url && setLightboxOpen(true)}
+        className={cn(
+          "group relative flex h-[340px] items-end bg-cover bg-center sm:h-[420px]",
+          event.cover_image_url && "cursor-zoom-in"
+        )}
         style={
           event.cover_image_url
             ? { backgroundImage: `url(${event.cover_image_url})` }
@@ -99,6 +105,11 @@ export default function EventDetailPage() {
       >
         <div className="bg-dot-grid absolute inset-0 opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+        {event.cover_image_url && (
+          <span className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full bg-ink/60 px-3 py-1.5 text-xs font-medium text-text-hi backdrop-blur transition-colors group-hover:bg-ink/80">
+            <Maximize2 className="size-3.5" /> View full image
+          </span>
+        )}
         <div className="relative mx-auto w-full max-w-5xl px-5 pb-10 sm:px-8">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="flex flex-wrap gap-2">
@@ -120,6 +131,8 @@ export default function EventDetailPage() {
           </motion.div>
         </div>
       </div>
+
+      <Lightbox src={event.cover_image_url} open={lightboxOpen} onClose={() => setLightboxOpen(false)} />
 
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1fr_360px]">
         {/* Main content */}

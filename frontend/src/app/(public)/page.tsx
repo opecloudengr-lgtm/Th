@@ -15,6 +15,8 @@ import Link from "next/link";
 import { EventCard } from "@/components/EventCard";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import { eventsApi } from "@/lib/api";
+import { useAuth } from "@/lib/auth-context";
+import { createEventHref } from "@/lib/utils";
 
 const steps = [
   { icon: Users, title: "Register & verify", body: "Create an account, confirm your email, and you're ready to book or build." },
@@ -28,6 +30,7 @@ const categories = [
 ];
 
 export default function HomePage() {
+  const { user } = useAuth();
   const { data } = useQuery({
     queryKey: ["home-events"],
     queryFn: () => eventsApi.list({ page_size: 6 }),
@@ -60,7 +63,7 @@ export default function HomePage() {
         ) : (
           <Reveal delay={0.1} className="mt-10 rounded-2xl border border-dashed border-line py-16 text-center text-text-mid">
             No public events yet — be the first to{" "}
-            <Link href="/register" className="text-violet underline underline-offset-4">
+            <Link href={createEventHref(user)} className="text-violet underline underline-offset-4">
               publish one
             </Link>
             .
@@ -133,7 +136,7 @@ export default function HomePage() {
                 </p>
               </div>
               <Link
-                href="/register"
+                href={createEventHref(user)}
                 className="group flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-violet to-pink px-7 py-3.5 font-medium text-white shadow-[0_10px_30px_-10px_rgba(139,92,246,0.6)] hover:brightness-110"
               >
                 Create your first event
@@ -148,6 +151,7 @@ export default function HomePage() {
 }
 
 function HeroSection() {
+  const { user } = useAuth();
   return (
     <section className="relative border-b border-line/70">
       <div className="bg-dot-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_40%,transparent_100%)]" />
@@ -196,7 +200,7 @@ function HeroSection() {
               Browse events
             </Link>
             <Link
-              href="/register"
+              href={createEventHref(user)}
               className="rounded-full border border-line px-7 py-3.5 font-medium text-text-hi hover:border-violet hover:text-violet"
             >
               Create an event

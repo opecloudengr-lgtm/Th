@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { NexoraMark } from "@/components/NexoraMark";
+import { useAuth } from "@/lib/auth-context";
+import { createEventHref } from "@/lib/utils";
 
 export function Footer() {
+  const { user } = useAuth();
   return (
     <footer className="border-t border-line/70 bg-ink-soft">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
@@ -21,7 +26,7 @@ export function Footer() {
               <h4 className="mb-3 text-xs font-semibold uppercase tracking-wide text-text-low">Platform</h4>
               <ul className="space-y-2 text-sm text-text-mid">
                 <li><Link href="/events" className="hover:text-text-hi">Browse events</Link></li>
-                <li><Link href="/register" className="hover:text-text-hi">Create an event</Link></li>
+                <li><Link href={createEventHref(user)} className="hover:text-text-hi">Create an event</Link></li>
                 <li><Link href="/verify" className="hover:text-text-hi">Staff check-in</Link></li>
               </ul>
             </div>

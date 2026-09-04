@@ -43,3 +43,13 @@ export function titleCase(s: string) {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 }
+
+/** Where "Create an event" should send someone: registration for a new
+ * visitor, straight to the create-event form for an organizer/admin who's
+ * already signed in, or their own dashboard for a signed-in attendee (who
+ * has an account already, so re-registering makes no sense). */
+export function createEventHref(user: { role: string } | null): string {
+  if (!user) return "/register";
+  if (user.role === "organizer" || user.role === "admin") return "/organizer/events/new";
+  return "/dashboard";
+}

@@ -69,7 +69,7 @@ export function DashboardShell({
       </nav>
 
       <div className="mt-auto space-y-1 border-t border-line pt-4">
-        <Link href="/dashboard/notifications" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-text-mid hover:bg-surface-raised/60 hover:text-text-hi">
+        <Link href="/notifications" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-text-mid hover:bg-surface-raised/60 hover:text-text-hi">
           <Bell className="size-4.5" />
           Notifications
           {!!unread?.count && <span className="ml-auto flex size-5 items-center justify-center rounded-full bg-pink text-[10px] font-semibold text-white">{unread.count}</span>}
@@ -120,12 +120,12 @@ export function DashboardShell({
 
         <header className="hidden items-center justify-end gap-4 border-b border-line/70 px-8 py-4 lg:flex">
           {user && (
-            <div className="flex items-center gap-2.5">
+            <Link href="/profile" className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-3 hover:bg-surface-raised">
               <span className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-violet to-pink text-xs font-semibold text-white">
                 {initials(user.first_name, user.last_name)}
               </span>
               <span className="text-sm font-medium text-text-hi">{user.first_name} {user.last_name}</span>
-            </div>
+            </Link>
           )}
         </header>
 
